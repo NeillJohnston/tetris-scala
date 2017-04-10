@@ -4,7 +4,7 @@ import com.badlogic.gdx.{Gdx, ScreenAdapter}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera, Texture}
 import com.badlogic.gdx.scenes.scene2d
 import com.badlogic.gdx.graphics.g2d.{NinePatch, TextureRegion}
-import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.{FitViewport, ScreenViewport}
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.RandomXS128
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -16,14 +16,12 @@ import scala.collection.mutable
 class TetrisScreen(game: TetrisScala) extends ScreenAdapter {
     // Init camera, viewport, random generator
     val camera = new OrthographicCamera()
-    camera.setToOrtho(false, 368, 368)
-    val viewport = new FitViewport(368, 368, camera)
+    camera.setToOrtho(false, 320, 320)
+    val viewport = new FitViewport(320, 320, camera)
+    val stageViewport = new ScreenViewport()
     val random: RandomXS128 = new RandomXS128()
 
     // Init textures, texture regions
-    val borderPatch = new NinePatch(new Texture(Gdx.files.internal("border-default.9.png")), 16, 16, 16, 16)
-    val stage = new Stage(viewport)
-    val border = new Image(borderPatch)
     val minoTexture = new Texture(Gdx.files.internal("mino.png"))
     val minoTypes: IndexedSeq[TextureRegion] =
         for(i <- 0 to 7) yield new TextureRegion(minoTexture, 0, 16*i, 16, 16)
