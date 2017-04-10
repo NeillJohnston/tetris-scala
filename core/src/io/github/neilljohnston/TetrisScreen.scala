@@ -2,14 +2,12 @@ package io.github.neilljohnston
 
 import com.badlogic.gdx.{Gdx, ScreenAdapter}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera, Texture}
-import com.badlogic.gdx.scenes.scene2d
-import com.badlogic.gdx.graphics.g2d.{NinePatch, TextureRegion}
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.viewport.{FitViewport, ScreenViewport}
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.RandomXS128
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.TimeUtils
+import org.jfugue.player.Player
 
 import scala.collection.mutable
 
@@ -51,6 +49,14 @@ class TetrisScreen(game: TetrisScala) extends ScreenAdapter {
     var scheduleDown: Long = 0
     var scheduleGrav: Long = 0
     var life: Long = 8000
+
+    // SICK TUNES BY ZT REDDY XDD
+    val thread = new Thread(() => {
+        val music = new Player()
+        while(true)
+            music play "T[Presto] E6is B5i C6i D6Q C6i B5i A5Q A5i C6i E6q D6i C6i B5q B5i c6i D6q E6q C6q a5q a5h d6q f6i a6q g6i f6i e6qi c6i e6q d6i c6i b5q b5i c6i d6q e6q c6q a5q a5h"
+    })
+    thread start()
 
     /**
       * Render everything, run game logic.
