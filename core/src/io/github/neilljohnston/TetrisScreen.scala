@@ -2,11 +2,13 @@ package io.github.neilljohnston
 
 import com.badlogic.gdx.{Gdx, ScreenAdapter}
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera, Texture}
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d
+import com.badlogic.gdx.graphics.g2d.{NinePatch, TextureRegion}
 import com.badlogic.gdx.utils.viewport.FitViewport
-import Tetromino.rotate
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.RandomXS128
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.TimeUtils
 
 import scala.collection.mutable
@@ -14,15 +16,18 @@ import scala.collection.mutable
 class TetrisScreen(game: TetrisScala) extends ScreenAdapter {
     // Init camera, viewport, random generator
     val camera = new OrthographicCamera()
-    camera.setToOrtho(false, 320, 320)
-    val viewport = new FitViewport(160, 160)
+    camera.setToOrtho(false, 368, 368)
+    val viewport = new FitViewport(368, 368, camera)
     val random: RandomXS128 = new RandomXS128()
 
     // Init textures, texture regions
+    val borderPatch = new NinePatch(new Texture(Gdx.files.internal("border-default.9.png")), 16, 16, 16, 16)
+    val stage = new Stage(viewport)
+    val border = new Image(borderPatch)
     val minoTexture = new Texture(Gdx.files.internal("mino.png"))
-    val ghostTexture = new Texture(Gdx.files.internal("ghost.png"))
     val minoTypes: IndexedSeq[TextureRegion] =
         for(i <- 0 to 7) yield new TextureRegion(minoTexture, 0, 16*i, 16, 16)
+    val ghostTexture = new Texture(Gdx.files.internal("ghost.png"))
     val ghostTypes: IndexedSeq[TextureRegion] =
         for(i <- 0 to 7) yield new TextureRegion(ghostTexture, 0, 16*i, 16, 16)
 
@@ -64,7 +69,7 @@ class TetrisScreen(game: TetrisScala) extends ScreenAdapter {
         // Render field, score text
         for(r <- field.indices; c <- field(r).indices)
             game.batch draw(minoTypes(field(r)(c)), 16*c, 16*r)
-        game.font.draw(game.batch, "Score: " + score, 176, 304)
+        game.font draw(game.batch, "Score: " + score, 176, 304)
 
         // Render preview
         for(t <- preview.indices; r <- preview(t).matrix.indices; c <- preview(t).matrix(r).indices)
@@ -83,7 +88,7 @@ class TetrisScreen(game: TetrisScala) extends ScreenAdapter {
             game.batch draw(minoTypes(player.minoType), 16 * (c + player.x), 16 * (r + player.y))
 
         if(player.minoType == 0)
-            game.font.draw(game.batch, "Game over!\nPress R to replay", 176, 288)
+            game.font draw(game.batch, "Game over!\nPress R to replay", 176, 288)
 
         game.batch end()
 
